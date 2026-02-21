@@ -1,0 +1,58 @@
+{% extends 'school/base.html' %}
+
+{% block title %}Course List{% endblock %}
+
+{% block content %}
+<div class="row mb-3">
+    <div class="col-md-8">
+        <h2><i class="fas fa-book"></i> Courses</h2>
+    </div>
+    <div class="col-md-4 text-end">
+        {% if user.is_authenticated %}
+        <a href="{% url 'course-create' %}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Add New Course
+        </a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-md-12">
+        <form method="GET" action="" class="d-flex">
+            <input class="form-control me-2" type="search" name="q" placeholder="Search by course name or code..." value="{{ request.GET.q }}">
+            <button class="btn btn-outline-primary" type="submit"><i class="fas fa-search"></i> Search</button>
+        </form>
+    </div>
+</div>
+
+<div class="row">
+    {% for course in courses %}
+    <div class="col-md-4 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">{{ course.name }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">{{ course.code }}</h6>
+                <p class="card-text">
+                    <strong>Credits:</strong> {{ course.credits }}<br>
+                    <strong>Teacher:</strong> {{ course.teacher|default:"Not assigned" }}<br>
+                    <strong>Students:</strong> {{ course.students.count }}
+                </p>
+                <p class="card-text">{{ course.description|truncatewords:20 }}</p>
+                <a href="{% url 'course-detail' course.id %}" class="btn btn-primary btn-sm">
+                    <i class="fas fa-eye"></i> View Details
+                </a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i> No courses found.
+            {% if user.is_authenticated %}
+            <a href="{% url 'course-create' %}">Add your first course</a>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

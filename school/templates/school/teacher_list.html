@@ -1,0 +1,64 @@
+{% extends 'school/base.html' %}
+
+{% block title %}Teacher List{% endblock %}
+
+{% block content %}
+<div class="row mb-3">
+    <div class="col-md-8">
+        <h2><i class="fas fa-chalkboard-teacher"></i> Teachers</h2>
+    </div>
+    <div class="col-md-4 text-end">
+        {% if user.is_authenticated %}
+        <a href="{% url 'teacher-create' %}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Add New Teacher
+        </a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-md-12">
+        <form method="GET" action="" class="d-flex">
+            <input class="form-control me-2" type="search" name="q" placeholder="Search by name or email..." value="{{ request.GET.q }}">
+            <button class="btn btn-outline-primary" type="submit"><i class="fas fa-search"></i> Search</button>
+        </form>
+    </div>
+</div>
+
+<div class="row">
+    {% for teacher in teachers %}
+    <div class="col-md-4 mb-3">
+        <div class="card h-100">
+            {% if teacher.photo %}
+            <img src="{{ teacher.photo.url }}" class="card-img-top" alt="{{ teacher.first_name }}" style="height: 200px; object-fit: cover;">
+            {% else %}
+            <div class="text-center p-4 bg-light">
+                <i class="fas fa-user-tie fa-5x text-secondary"></i>
+            </div>
+            {% endif %}
+            <div class="card-body">
+                <h5 class="card-title">{{ teacher.first_name }} {{ teacher.last_name }}</h5>
+                <p class="card-text">
+                    <i class="fas fa-envelope"></i> {{ teacher.email }}<br>
+                    <i class="fas fa-phone"></i> {{ teacher.phone }}<br>
+                    <i class="fas fa-certificate"></i> {{ teacher.qualification }}<br>
+                    <i class="fas fa-calendar"></i> Hired: {{ teacher.hire_date|date:"M d, Y" }}
+                </p>
+                <a href="{% url 'teacher-detail' teacher.id %}" class="btn btn-primary btn-sm">
+                    <i class="fas fa-eye"></i> View Details
+                </a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i> No teachers found.
+            {% if user.is_authenticated %}
+            <a href="{% url 'teacher-create' %}">Add your first teacher</a>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

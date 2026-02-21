@@ -1,0 +1,59 @@
+{% extends 'school/base.html' %}
+
+{% block title %}{{ course.name }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <div class="card mb-3">
+            <div class="card-header">
+                <h4>{{ course.name }} ({{ course.code }})</h4>
+            </div>
+            <div class="card-body">
+                <p class="card-text">
+                    <strong>Credits:</strong> {{ course.credits }}<br>
+                    <strong>Teacher:</strong> 
+                    {% if course.teacher %}
+                    <a href="{% url 'teacher-detail' course.teacher.id %}">{{ course.teacher }}</a>
+                    {% else %}
+                    Not assigned
+                    {% endif %}
+                </p>
+                <h5>Description</h5>
+                <p>{{ course.description }}</p>
+                
+                {% if user.is_authenticated %}
+                <div class="mt-3">
+                    <a href="#" class="btn btn-warning">
+                        <i class="fas fa-edit"></i> Edit Course
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-users"></i> Enrolled Students ({{ students.count }})</h5>
+            </div>
+            <div class="card-body">
+                <div class="list-group">
+                    {% for student in students %}
+                    <a href="{% url 'student-detail' student.id %}" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">{{ student.first_name }} {{ student.last_name }}</h6>
+                            <small>Year {{ student.year }}</small>
+                        </div>
+                        <small>{{ student.email }}</small>
+                    </a>
+                    {% empty %}
+                    <p class="text-muted">No students enrolled in this course</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends 'school/base.html' %}
+
+{% block title %}Grade Records{% endblock %}
+
+{% block content %}
+<div class="row mb-3">
+    <div class="col-md-8">
+        <h2><i class="fas fa-star"></i> Grade Records</h2>
+    </div>
+    <div class="col-md-4 text-end">
+        <a href="{% url 'grade-create' %}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Add Grade
+        </a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Student</th>
+                        <th>Course</th>
+                        <th>Assignment</th>
+                        <th>Grade</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for grade in grades %}
+                    <tr>
+                        <td>{{ grade.date|date:"M d, Y" }}</td>
+                        <td>
+                            <a href="{% url 'student-detail' grade.student.id %}">
+                                {{ grade.student }}
+                            </a>
+                        </td>
+                        <td>{{ grade.course.name }}</td>
+                        <td>{{ grade.assignment_name }}</td>
+                        <td>
+                            <span class="badge bg-primary">{{ grade.grade }}</span>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center text-muted">No grade records found</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

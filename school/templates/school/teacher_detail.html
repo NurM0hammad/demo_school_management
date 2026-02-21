@@ -1,0 +1,72 @@
+{% extends 'school/base.html' %}
+
+{% block title %}{{ teacher.first_name }} {{ teacher.last_name }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            {% if teacher.photo %}
+            <img src="{{ teacher.photo.url }}" class="card-img-top" alt="{{ teacher.first_name }}">
+            {% else %}
+            <div class="text-center p-5">
+                <i class="fas fa-user-tie fa-6x text-secondary"></i>
+            </div>
+            {% endif %}
+            <div class="card-body">
+                <h4 class="card-title">{{ teacher.first_name }} {{ teacher.last_name }}</h4>
+                <p class="card-text">
+                    <strong><i class="fas fa-envelope"></i> Email:</strong> {{ teacher.email }}<br>
+                    <strong><i class="fas fa-phone"></i> Phone:</strong> {{ teacher.phone }}<br>
+                    <strong><i class="fas fa-certificate"></i> Qualification:</strong> {{ teacher.qualification }}<br>
+                    <strong><i class="fas fa-calendar"></i> Hire Date:</strong> {{ teacher.hire_date|date:"F d, Y" }}<br>
+                    <strong><i class="fas fa-map-marker-alt"></i> Address:</strong> {{ teacher.address }}
+                </p>
+                {% if user.is_authenticated %}
+                <div class="d-grid">
+                    <a href="#" class="btn btn-warning">
+                        <i class="fas fa-edit"></i> Edit Teacher
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-book"></i> Courses Taught</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Course Code</th>
+                                <th>Course Name</th>
+                                <th>Credits</th>
+                                <th>Students Enrolled</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for course in courses %}
+                            <tr>
+                                <td>{{ course.code }}</td>
+                                <td><a href="{% url 'course-detail' course.id %}">{{ course.name }}</a></td>
+                                <td>{{ course.credits }}</td>
+                                <td>{{ course.students.count }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center text-muted">No courses assigned</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
